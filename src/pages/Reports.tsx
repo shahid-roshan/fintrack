@@ -1,4 +1,6 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
 
 const data = [
   { month: 'Jan', income: 80000, expense: 30000 },
@@ -10,9 +12,24 @@ const data = [
 ]
 
 function Reports() {
+  const { data: apiData, isLoading, isError } = useQuery({
+    queryKey: ['transactions'],
+    queryFn: async () => {
+      const { data } = await axios.get('https://jsonplaceholder.typicode.com/todos?_limit=10')
+      return data
+    }
+  })
+
   return (
     <div className="bg-gray-900 min-h-screen p-6">
       <h1 className="text-3xl text-green-500 font-bold mb-6">Reports 📊</h1>
+
+      <div className="bg-gray-800 p-4 rounded-lg mb-6">
+        <h2 className="text-white font-bold mb-2">React Query Data:</h2>
+        {isLoading && <p className="text-yellow-500">Loading... ⏳</p>}
+        {isError && <p className="text-red-500">Error aa gaya! ❌</p>}
+        {apiData && <p className="text-green-500">✅ {apiData.length} records fetched!</p>}
+      </div>
 
       <div className="bg-gray-800 p-4 rounded-lg mb-6">
         <h2 className="text-white text-xl font-bold mb-4">Monthly Income vs Expense</h2>
@@ -42,7 +59,6 @@ function Reports() {
           <p className="text-2xl text-blue-500 font-bold">PKR 2,83,000</p>
         </div>
       </div>
-
     </div>
   )
 }
