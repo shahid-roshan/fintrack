@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const API = axios.create({
-  baseURL: 'https://jsonplaceholder.typicode.com'
+  baseURL: 'https://fintrack-backend-production-9a96.up.railway.app/api'
 })
 
 export const fetchTransactions = async () => {
